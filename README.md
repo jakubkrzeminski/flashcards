@@ -10,4 +10,7 @@ Tools and technologies used:
 * CSS
 * JavaScript
 * Maven
+* Bootstrap
+* Thymeleaf
+* jQuery
 * IntelliJ IDEA
