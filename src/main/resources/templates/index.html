@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:if="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/buttons.css">
+</head>
+
+<body>
+<div id="name-container" class="container">
+    <a href="/" id="name">Flashcards</a>
+</div>
+
+<div id="buttons" class="container">
+    <a class="fs-4 btn btn-primary" href="/practice" role="button" th:style="${dbIsEmpty ? 'pointer-events: none; opacity: .65' : ''}">Practice</a>
+    <a class="fs-4 btn btn-primary" href="/flashcards" role="button" type="button">Show words</a>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+#buttons {
+    height: 15rem;
+    width: 30rem;
+    text-align: center;
+}
+
+.btn {
+    line-height: 4rem;
+    height: 5rem;
+    width: 25rem;
+    margin-bottom: 1rem;
+}

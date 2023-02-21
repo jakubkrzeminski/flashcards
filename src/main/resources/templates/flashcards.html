@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flashcards</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/js/edit.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+<div id="name-container" class="container">
+    <a href="/" id="name">Flashcards</a>
+</div>
+
+    <div id="main" class="col-4 mx-auto mt-3">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 45%">Front</th>
+                <th scope="col" style="width: 45%">Back</th>
+                <th scope="col" style="width: 10%"></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:if="${flashcards.getTotalPages() == 0}">
+                <td colspan="3" class="text-center">No data</td>
+            </tr>
+            <tr th:each="flashcard : ${flashcards}">
+                <td scope="row" class="align-middle" th:text="${flashcard.front}">#</td>
+                <td scope="row" class="align-middle" th:text="${flashcard.back}">#</td>
+                <td class="align-middle text-end">
+                    <div class="btn-group float-right" role="group">
+                        <button type="button" class="btn btn-lg dropdown-toggle" data-bs-toggle="dropdown"></button>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{'/flashcards/getOne/' + ${flashcard.id}}" class="dropdown-item" name="editButton">Edit</a></li>
+                            <li><a th:href="@{'/flashcards/delete/' + ${flashcard.id}}" class="dropdown-item" name="deleteButton">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    <nav th:if="${flashcards.getTotalPages()} != 0" aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${flashcards.first} ? 'disabled'"><a class="page-link" th:href="@{flashcards(page = ${flashcards.number - 1})}">Previous</a></li>
+            <li th:each="page : ${#numbers.sequence(0, flashcards.totalPages - 1)}" class="page-item"><a class="page-link" th:classappend="${flashcards.number} == ${page} ? 'active'" th:href="@{flashcards(page = ${page})}" th:text="${page + 1}">#</a></li>
+            <li class="page-item" th:classappend="${flashcards.last} ? 'disabled'"><a class="page-link" th:href="@{flashcards(page = ${flashcards.number + 1})}">Next</a></li>
+        </ul>
+    </nav>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Add flashcard</button>
+
+        <div class="modal fade" id="saveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Add flashcard</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form th:action="@{/flashcards/save}" th:object="${flashcard}" method="post">
+                            <div class="mb-3">
+                                <label for="front" class="col-form-label">Front</label>
+                                <input type="text" class="form-control" id="front" th:field="*{front}" required>
+                                <div id="validationFront" class="invalid-feedback" th:errors="*{front}">#</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="back" class="col-form-label">Back</label>
+                                <input type="text" class="form-control" id="back" th:field="*{back}" required>
+                                <div id="validationBack" class="invalid-feedback" th:errors="*{back}">#</div>
+                            </div>
+                            <input type="hidden" th:field="*{id}"/>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Edit flashcard</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form th:action="@{/flashcards/update}" th:object="${flashcard}" method="put">
+                        <input type="hidden" id="idEdit" th:field="*{id}"/>
+                        <div class="mb-3">
+                            <label for="frontEdit" class="col-form-label">Front</label>
+                            <input type="text" class="form-control" id="frontEdit" th:field="*{front}" required>
+                            <div id="validationFrontEdit" class="invalid-feedback" th:errors="*{front}">#</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="backEdit" class="col-form-label">Back</label>
+                            <input type="text" class="form-control" id="backEdit" th:field="*{back}" required>
+                            <div id="validationBackEdit" class="invalid-feedback" th:errors="*{back}">#</div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

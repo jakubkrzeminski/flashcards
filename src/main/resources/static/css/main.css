@@ -1,0 +1,17 @@
+body {
+    font-family: "Monaco", monospace;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+#name-container {
+    width: 15rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#name {
+    font-size: 2rem;
+    color: black;
+    text-decoration: none;
+}
